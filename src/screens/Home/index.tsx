@@ -1,5 +1,4 @@
 import React from 'react';
-import { StatusBar } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 import LogoSvg from '../../assets/logo.svg';
@@ -23,16 +22,11 @@ export function Home() {
             period: 'Diária',
             price: 80
         },
-        thumbnail: 'https://i.imgur.com/7jtQ4.png'
+        thumbnail: 'https://www.enterprise.com/content/dam/ecom/utilitarian/common/exotics/us-refresh/car-thumbnails/thumbnail-2019-lamborghini-huracan-2048x1360.png'
     }
 
     return (
         <Container>
-            <StatusBar
-                barStyle="light-content"
-                backgroundColor="transparent"
-                translucent
-            />
             <Header>
                 <HeaderContent>
                     <LogoSvg

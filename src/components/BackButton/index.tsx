@@ -21,7 +21,7 @@ export function BackButton({
     return (
         <Container {...rest}>
             <MaterialIcons
-                name="arrow-back"
+                name="chevron-left"
                 size={24}
                 color={color ?? theme.colors.text}
             />
