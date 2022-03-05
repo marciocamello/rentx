@@ -9,17 +9,19 @@ import {
 
 interface Props extends BorderlessButtonProps {
     color?: string;
+    onPress?: () => void;
 }
 
 export function BackButton({
     color,
+    onPress,
     ...rest
 }: Props) {
 
     const theme = useTheme();
 
     return (
-        <Container {...rest}>
+        <Container {...rest} onPress={onPress}>
             <MaterialIcons
                 name="chevron-left"
                 size={24}

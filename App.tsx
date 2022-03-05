@@ -19,10 +19,7 @@ import {
 
 import theme from './src/styles/theme';
 
-import { Home } from './src/screens/Home';
-import { CardDetails } from './src/screens/CardDetails';
-import { Scheduling } from './src/screens/Scheduling';
-import { StatusBar } from 'react-native';
+import { Routes } from './src/routes';
 
 export default function App() {
     const [fontsLoaded] = useFonts({
@@ -39,12 +36,7 @@ export default function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <StatusBar
-                barStyle="light-content"
-                backgroundColor="transparent"
-                translucent
-            />
-            <Scheduling />
+            <Routes />
         </ThemeProvider>
     );
 }

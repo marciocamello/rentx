@@ -1,4 +1,7 @@
 import React from 'react';
+import { StatusBar } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+
 import { Accessory } from '../../components/Accessory';
 import { BackButton } from '../../components/BackButton';
 import { ImageSlider } from '../../components/ImageSlider';
@@ -28,12 +31,28 @@ import {
     Footer,
 } from './styles';
 
-export function CardDetails() {
+export function CarDetails() {
+
+    const navigation = useNavigation();
+
+    function handleBack() {
+        navigation.navigate('Home');
+    }
+
+    function handleConfirmRental() {
+        navigation.navigate('Scheduling');
+    }
+
     return (
         <Container>
+            <StatusBar
+                barStyle="dark-content"
+                backgroundColor="transparent"
+                translucent
+            />
             <Header>
                 <BackButton
-                    onPress={() => console.log('Voltar')}
+                    onPress={handleBack}
                 />
             </Header>
 
@@ -77,7 +96,10 @@ export function CardDetails() {
             </Content>
 
             <Footer>
-                <Button title="Confirm" />
+                <Button
+                    title="Choose rent period"
+                    onPress={handleConfirmRental}
+                />
             </Footer>
 
         </Container>
