@@ -1,64 +1,39 @@
 import React from 'react';
 import { Feather } from '@expo/vector-icons';
-
-import {
-    Calendar as CustomCalendar,
-    LocaleConfig
-} from 'react-native-calendars';
 import { useTheme } from 'styled-components';
 
-LocaleConfig.locales['pt-BR'] = {
-    monthNames: [
-        'Janeiro',
-        'Fevereiro',
-        'Março',
-        'Abril',
-        'Maio',
-        'Junho',
-        'Julho',
-        'Agosto',
-        'Setembro',
-        'Outubro',
-        'Novembro',
-        'Dezembro'
-    ],
-    monthNamesShort: [
-        'Jan',
-        'Fev',
-        'Mar',
-        'Abr',
-        'Mai',
-        'Jun',
-        'Jul',
-        'Ago',
-        'Set',
-        'Out',
-        'Nov',
-        'Dez'
-    ],
-    dayNames: [
-        'Domingo',
-        'Segunda',
-        'Terça',
-        'Quarta',
-        'Quinta',
-        'Sexta',
-        'Sábado'
-    ],
-    dayNamesShort: [
-        'DOM',
-        'SEG',
-        'TER',
-        'QUA',
-        'QUI',
-        'SEX',
-        'SAB',
-    ],
-};
+import {
+    Calendar as CustomCalendar, DateData
+} from 'react-native-calendars';
 
-LocaleConfig.defaultLocale = 'pt-BR';
+import * as LocaleConfig from './LocaleConfig';
 
-export function Calendar() {
+interface MarketDateProps {
+    [data: string]: {
+        color: string;
+        textColor: string;
+        disabled?: boolean;
+        disabledTouchEvent?: boolean;
+    }
+}
+
+interface DayProps {
+    dateString: string;
+    day: number;
+    month: number;
+    timestamp: number;
+    year: number;
+}
+
+interface CalendarProps {
+    marketDates: MarketDateProps;
+    onDayPress: DateData;
+}
+
+function Calendar({
+    marketDates,
+    onDayPress
+}: CalendarProps) {
     const theme = useTheme();
 
     return (
@@ -90,6 +65,15 @@ export function Calendar() {
             }}
             firstDay={1}
             minDate={new Date().toISOString()}
+            markingType={'period'}
+            markedDates={marketDates}
+            onDayPress={onDayPress}
         />
     );
+}
+
+export {
+    Calendar,
+    MarketDateProps,
+    DayProps,
 }

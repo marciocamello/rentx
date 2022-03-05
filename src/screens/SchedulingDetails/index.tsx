@@ -50,7 +50,7 @@ export function SchedulingDetails() {
     const navigation = useNavigation();
 
     function handleBack() {
-        navigation.navigate('Scheduling');
+        navigation.goBack();
     }
 
     function handleConfirmRental() {

@@ -1,52 +1,56 @@
 {
-  "name": "rentx",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "android": "react-native run-android",
-    "ios": "react-native run-ios",
-    "web": "expo start --web",
-    "start": "react-native start",
-    "test": "jest"
-  },
-  "dependencies": {
-    "@expo-google-fonts/archivo": "^0.2.2",
-    "@expo-google-fonts/inter": "^0.2.2",
-    "@react-navigation/native": "^6.0.8",
-    "@react-navigation/native-stack": "^6.5.0",
-    "expo": "~41.0.1",
-    "expo-app-loading": "^1.3.0",
-    "expo-modules-core": "^0.6.5",
-    "expo-splash-screen": "~0.10.2",
-    "expo-updates": "~0.5.4",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-native": "~0.63.4",
-    "react-native-calendars": "^1.1278.0",
-    "react-native-gesture-handler": "~1.10.2",
-    "react-native-iphone-x-helper": "^1.3.1",
-    "react-native-reanimated": "~2.1.0",
-    "react-native-responsive-fontsize": "^0.5.1",
-    "react-native-safe-area-context": "3.2.0",
-    "react-native-screens": "~3.0.0",
-    "react-native-svg": "12.1.0",
-    "react-native-unimodules": "~0.13.3",
-    "react-native-web": "~0.13.12",
-    "styled-components": "^5.3.3"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@types/react": "~16.9.35",
-    "@types/react-native": "~0.63.2",
-    "@types/react-native-calendars": "^1.1264.3",
-    "@types/styled-components-react-native": "^5.1.3",
-    "babel-preset-expo": "~8.3.0",
-    "jest-expo": "~41.0.0",
-    "react-native-svg-transformer": "^1.0.0",
-    "typescript": "~4.0.0"
-  },
-  "jest": {
-    "preset": "react-native"
-  },
-  "private": true
+    "name": "rentx",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "android": "react-native run-android",
+        "ios": "react-native run-ios",
+        "web": "expo start --web",
+        "start": "react-native start",
+        "test": "jest",
+        "api": "json-server ./src/services/server.json --host 192.168.1.67 --port 3333 --delay 700"
+    },
+    "dependencies": {
+        "@expo-google-fonts/archivo": "^0.2.2",
+        "@expo-google-fonts/inter": "^0.2.2",
+        "@react-navigation/native": "^6.0.8",
+        "@react-navigation/native-stack": "^6.5.0",
+        "axios": "^0.26.0",
+        "expo": "~41.0.1",
+        "expo-app-loading": "^1.3.0",
+        "expo-modules-core": "^0.6.5",
+        "expo-splash-screen": "~0.10.2",
+        "expo-updates": "~0.5.4",
+        "react": "16.13.1",
+        "react-dom": "16.13.1",
+        "react-native": "~0.63.4",
+        "react-native-calendars": "^1.1278.0",
+        "react-native-gesture-handler": "~1.10.2",
+        "react-native-iphone-x-helper": "^1.3.1",
+        "react-native-reanimated": "~2.1.0",
+        "react-native-responsive-fontsize": "^0.5.1",
+        "react-native-safe-area-context": "3.2.0",
+        "react-native-screens": "~3.0.0",
+        "react-native-svg": "12.1.0",
+        "react-native-unimodules": "~0.13.3",
+        "react-native-web": "~0.13.12",
+        "styled-components": "^5.3.3"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.9.0",
+        "@types/axios": "^0.14.0",
+        "@types/react": "~16.9.35",
+        "@types/react-native": "~0.63.2",
+        "@types/react-native-calendars": "^1.1264.3",
+        "@types/styled-components-react-native": "^5.1.3",
+        "babel-preset-expo": "~8.3.0",
+        "jest-expo": "~41.0.0",
+        "json-server": "^0.17.0",
+        "react-native-svg-transformer": "^1.0.0",
+        "typescript": "~4.0.0"
+    },
+    "jest": {
+        "preset": "react-native"
+    },
+    "private": true
 }

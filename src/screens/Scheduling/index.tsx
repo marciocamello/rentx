@@ -8,7 +8,7 @@ import { BackButton } from '../../components/BackButton';
 import ArrowSvg from '../../assets/arrow.svg';
 
 import { Button } from '../../components/Button';
-import { Calendar } from '../../components/Calendar';
+import { Calendar, DayProps } from '../../components/Calendar';
 
 import {
     Container,
@@ -29,11 +29,15 @@ export function Scheduling() {
     const navigation = useNavigation();
 
     function handleBack() {
-        navigation.navigate('CarDetails');
+        navigation.goBack();
     }
 
     function handleConfirmRental() {
         navigation.navigate('SchedulingDetails');
+    }
+
+    function handleChangeDate(date: DayProps) {
+        console.log(date);
     }
 
     return (
@@ -76,7 +80,15 @@ export function Scheduling() {
             </Header>
 
             <Content>
-                <Calendar />
+                <Calendar
+                    marketDates={{
+                        '2022-03-05': {
+                            color: theme.colors.main,
+                            textColor: theme.colors.text,
+                        }
+                    }}
+                    onDayPress={handleChangeDate}
+                />
             </Content>
 
             <Footer>
