@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { StatusBar } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { BackButton } from '../../components/BackButton';
 
 import ArrowSvg from '../../assets/arrow.svg';
 
 import { Button } from '../../components/Button';
-import { Calendar, DayProps } from '../../components/Calendar';
+import { Calendar, DayProps, generateInterval, MarketDateProps } from '../../components/Calendar';
+
+import { format } from 'date-fns';
+import { getPlatformDate } from '../../utils/getPlatformDate';
+import { CarDTO } from '../../dtos/carDTO';
 
 import {
     Container,
@@ -22,22 +26,57 @@ import {
     Footer
 } from './styles';
 
+interface RentalPeriod {
+    startFormatted: string;
+    endFormatted: string;
+}
+
+interface Params {
+    car: CarDTO;
+}
+
 export function Scheduling() {
+    const [lastSelectedDate, setLastSelectedDate] = useState<DayProps>({} as DayProps);
+    const [markedDates, setMarkedDates] = useState<MarketDateProps>({} as MarketDateProps);
+    const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>({} as RentalPeriod);
 
     const theme = useTheme();
 
     const navigation = useNavigation();
+    const route = useRoute();
+    const { car } = route.params as Params;
 
     function handleBack() {
         navigation.goBack();
     }
 
     function handleConfirmRental() {
-        navigation.navigate('SchedulingDetails');
+
+        navigation.navigate('SchedulingDetails', {
+            car,
+            dates: Object.keys(markedDates),
+        });
     }
 
     function handleChangeDate(date: DayProps) {
-        console.log(date);
+        let start = !lastSelectedDate.timestamp ? date : lastSelectedDate;
+        let end = date;
+
+        if (start.timestamp > end.timestamp) {
+            [start, end] = [end, start];
+        }
+
+        setLastSelectedDate(end);
+        const interval = generateInterval(start, end);
+        setMarkedDates(interval);
+
+        const firstDate = Object.keys(interval)[0];
+        const lastDate = Object.keys(interval)[Object.keys(interval).length - 1];
+
+        setRentalPeriod({
+            startFormatted: format(getPlatformDate(new Date(firstDate)), 'dd/MM/yyyy'),
+            endFormatted: format(getPlatformDate(new Date(lastDate)), 'dd/MM/yyyy'),
+        });
     }
 
     return (
@@ -62,8 +101,8 @@ export function Scheduling() {
                 <RentalPeriod>
                     <DateInfo>
                         <DateTitle>DE</DateTitle>
-                        <DateValue selected={false}>
-                            18/06/2022
+                        <DateValue selected={!!rentalPeriod.startFormatted}>
+                            {rentalPeriod.startFormatted}
                         </DateValue>
                     </DateInfo>
 
@@ -71,8 +110,9 @@ export function Scheduling() {
 
                     <DateInfo>
                         <DateTitle>ATE</DateTitle>
-                        <DateValue selected={false}
-                        >18/06/2022
+                        <DateValue selected={!!rentalPeriod.endFormatted}
+                        >
+                            {rentalPeriod.endFormatted}
                         </DateValue>
                     </DateInfo>
 
@@ -81,12 +121,7 @@ export function Scheduling() {
 
             <Content>
                 <Calendar
-                    marketDates={{
-                        '2022-03-05': {
-                            color: theme.colors.main,
-                            textColor: theme.colors.text,
-                        }
-                    }}
+                    marketDates={markedDates}
                     onDayPress={handleChangeDate}
                 />
             </Content>
@@ -95,6 +130,7 @@ export function Scheduling() {
                 <Button
                     title='Confirm'
                     onPress={handleConfirmRental}
+                    enabled={!!rentalPeriod.startFormatted && !!rentalPeriod.endFormatted}
                 />
             </Footer>
         </Container>

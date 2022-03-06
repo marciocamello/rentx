@@ -3,10 +3,13 @@ import { Feather } from '@expo/vector-icons';
 import { useTheme } from 'styled-components';
 
 import {
-    Calendar as CustomCalendar, DateData
+    Calendar as CustomCalendar,
+    DateData
 } from 'react-native-calendars';
 
-import * as LocaleConfig from './LocaleConfig';
+import { generateInterval } from './generateInterval';
+
+import './localeConfig';
 
 interface MarketDateProps {
     [data: string]: {
@@ -17,17 +20,11 @@ interface MarketDateProps {
     }
 }
 
-interface DayProps {
-    dateString: string;
-    day: number;
-    month: number;
-    timestamp: number;
-    year: number;
-}
+type DayProps = DateData;
 
 interface CalendarProps {
     marketDates: MarketDateProps;
-    onDayPress: DateData;
+    onDayPress?: (date: DateData) => void;
 }
 
 function Calendar({
@@ -76,4 +73,5 @@ export {
     Calendar,
     MarketDateProps,
     DayProps,
+    generateInterval
 }

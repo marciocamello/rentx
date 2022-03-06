@@ -9,6 +9,12 @@ export function Load() {
         <ActivityIndicator
             color={theme.colors.main}
             size="large"
+            style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '50%',
+            }}
         />
     );
 }
