@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import { FlatList, ViewToken } from 'react-native';
 
 import {
     Container,
@@ -12,26 +13,52 @@ interface Props {
     imagesURL: string[]
 }
 
+interface ChangeImageProps {
+    viewableItems: ViewToken[];
+    changed: ViewToken[];
+}
+
 export function ImageSlider({
     imagesURL
 }: Props) {
+
+    const [imageIndex, setImageIndex] = useState(0);
+
+    const indexChanges = useRef((info: ChangeImageProps) => {
+        const index = info.viewableItems[0].index!;
+        setImageIndex(index);
+    });
+
     return (
         <Container>
             <ImageIndexes>
-                <ImageIndex active={true} />
-                <ImageIndex active={true} />
-                <ImageIndex active={true} />
-                <ImageIndex active={true} />
+                {
+                    imagesURL.map((_, index) => (
+                        <ImageIndex
+                            key={String(index)}
+                            active={imageIndex === index}
+                        />
+                    ))
+                }
             </ImageIndexes>
 
-            <CarImageWrapper>
-                <CarImage
-                    source={{
-                        uri: imagesURL[0]
-                    }}
-                    resizeMode="contain"
-                />
-            </CarImageWrapper>
+            <FlatList
+                data={imagesURL}
+                keyExtractor={(item, index) => String(index)}
+                renderItem={({ item }) => (
+                    <CarImageWrapper>
+                        <CarImage
+                            source={{
+                                uri: item
+                            }}
+                            resizeMode="contain"
+                        />
+                    </CarImageWrapper>
+                )}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                onViewableItemsChanged={indexChanges.current}
+            />
         </Container>
     );
 }
