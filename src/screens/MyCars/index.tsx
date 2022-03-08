@@ -6,7 +6,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components';
 
 import { BackButton } from '../../components/BackButton';
-import { Load } from '../../components/Load';
+import { LoadAnimation } from '../../components/LoadAnimation';
 
 import { Car } from '../../components/Car';
 import { CarDTO } from '../../dtos/carDTO';
@@ -52,7 +52,9 @@ export function MyCars() {
         async function fetchCars() {
             try {
                 const response = await api.get('/schedules_byuser/?user_id=1');
-                setCars(response.data);
+                const carsData = response.data;
+                carsData.reverse();
+                setCars(carsData);
             } catch (err) {
                 console.log(err);
             } finally {
@@ -85,7 +87,7 @@ export function MyCars() {
                 </SubTitle>
 
             </Header>
-            {loading ? (<Load />) : (
+            {loading ? (<LoadAnimation />) : (
                 <Content>
                     <Appointments>
                         <AppointmentsTitle>Agendamentos feitos</AppointmentsTitle>

@@ -1,38 +1,79 @@
-import React from 'react';
-import { Button, StatusBar, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { StatusBar } from 'react-native';
 
 import Animated, {
     useSharedValue,
     useAnimatedStyle,
     withTiming,
-    Easing
+    interpolate,
+    Extrapolate,
+    runOnJS
 } from 'react-native-reanimated';
 
-const WIDTH = Dimensions.get('window').width;
+import BrandSvg from '../../assets/brand.svg';
+import LogoSvg from '../../assets/logo.svg';
 
 import {
     Container
 } from './styles';
 
-export function Splash() {
-    const animation = useSharedValue(0);
 
-    const animatedStyles = useAnimatedStyle(() => {
+export function Splash() {
+    const splashAnimation = useSharedValue(0);
+
+    const navigation = useNavigation();
+
+    const brandStyle = useAnimatedStyle(() => {
         return {
+            opacity: interpolate(splashAnimation.value,
+                [0, 50],
+                [1, 0]
+            ),
             transform: [
                 {
-                    translateX: withTiming(animation.value, {
-                        duration: 500,
-                        easing: Easing.bezier(0, 1, 1, .01)
-                    })
+                    translateX: interpolate(splashAnimation.value,
+                        [0, 50],
+                        [0, -50],
+                        Extrapolate.CLAMP
+                    )
                 }
             ]
         };
     });
 
-    function handleAnimationPosition() {
-        animation.value = Math.random() * (WIDTH - 100);
+    const logoStyle = useAnimatedStyle(() => {
+        return {
+            opacity: interpolate(splashAnimation.value,
+                [0, 25, 50],
+                [0, .3, 1]
+            ),
+            transform: [
+                {
+                    translateX: interpolate(splashAnimation.value,
+                        [0, 50],
+                        [-50, 0],
+                        Extrapolate.CLAMP
+                    )
+                }
+            ]
+        };
+    });
+
+    function startApp() {
+        navigation.navigate('Home');
     }
+
+    useEffect(() => {
+        splashAnimation.value = withTiming(
+            50,
+            { duration: 1500 },
+            () => {
+                'worklet'
+                runOnJS(startApp)();
+            }
+        );
+    }, []);
 
     return (
         <Container>
@@ -41,17 +82,12 @@ export function Splash() {
                 backgroundColor="transparent"
                 translucent
             />
-            <Animated.View style={[styles.box, animatedStyles]} />
-            <Button title="Go to Home" onPress={handleAnimationPosition} />
-
+            <Animated.View style={[brandStyle, { position: "absolute" }]}>
+                <BrandSvg width={80} height={50} />
+            </Animated.View>
+            <Animated.View style={[logoStyle, { position: "absolute" }]}>
+                <LogoSvg width={180} height={20} />
+            </Animated.View>
         </Container>
     );
 }
-
-const styles = StyleSheet.create({
-    box: {
-        width: 100,
-        height: 100,
-        backgroundColor: 'red',
-    }
-});
