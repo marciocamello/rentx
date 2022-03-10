@@ -38,12 +38,12 @@ export function SignIn() {
     async function handleSignIn() {
         try {
             const schema = Yup.object().shape({
-                email: Yup.string()
-                    .required('O e-mail é obrigatório')
-                    .email('Insira um e-mail válido'),
                 password: Yup.string()
                     .required('A senha é obrigatória')
                     .min(6, 'A senha deve ter no mínimo 6 caracteres'),
+                email: Yup.string()
+                    .required('O e-mail é obrigatório')
+                    .email('Insira um e-mail válido'),
             });
 
             await schema.validate({ email, password });
@@ -51,12 +51,12 @@ export function SignIn() {
             Alert.alert('Sucesso', 'Login realizado com sucesso');
 
             // fazer login
-        } catch (err) {
+        } catch (error) {
 
-            if (err instanceof Yup.ValidationError) {
-                Alert.alert('Erro', err.message);
+            if (error instanceof Yup.ValidationError) {
+                Alert.alert('Erro na validação', error.message);
             } else {
-                Alert.alert('Erro', 'Ocorreu um erro ao fazer login');
+                Alert.alert('Erro ao fazer login', 'Ocorreu um erro ao fazer login');
             }
         }
     }
@@ -118,7 +118,7 @@ export function SignIn() {
                             title='Criar conta gratuita'
                             color={theme.colors.background_secondary}
                             onPress={handleNewAccount}
-                            enabled={false}
+                            enabled={true}
                             loading={false}
                             light
                         />

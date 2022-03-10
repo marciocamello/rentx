@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useState } from 'react';
 
 import {
@@ -9,12 +9,13 @@ import {
 } from 'react-native';
 
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { useTheme } from 'styled-components';
 
 import * as Yup from 'yup';
 
 import { BackButton } from '../../../components/BackButton';
 import { Bullet } from '../../../components/Bullet';
-import { Input } from '../../../components/Input';
+import { PasswordInput } from '../../../components/PasswordInput';
 import { Button } from '../../../components/Button';
 
 import {
@@ -27,32 +28,55 @@ import {
     FormTitle
 } from './styles';
 
-export function SignUpFirstStep() {
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [document, setDocument] = useState('');
+interface Params {
+    user: {
+        name: string;
+        email: string;
+        document: string;
+    }
+}
+
+export function SignUpSecondStep() {
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
 
     const navigation = useNavigation();
+    const route = useRoute();
+    const { user } = route.params as Params;
+
+    const theme = useTheme();
 
     function handleBack() {
         navigation.goBack();
     }
 
-    async function handleNextStep() {
+    async function handleRegister() {
         try {
+
             const schema = Yup.object().shape({
-                document: Yup.string().required('CPF/CNH obrigatório'),
-                email: Yup.string()
-                    .email('Digite um e-mail válido')
-                    .required('E-mail obrigatório'),
-                name: Yup.string().required('Nome obrigatório'),
+                password: Yup.string().required('Senha obrigatória'),
+                confirmPassword: Yup.string()
+                    .oneOf([Yup.ref('password'), null], 'Senhas não conferem')
+                    .required('Confirmação de senha obrigatória')
             });
 
-            const data = { name, email, document }
-            await schema.validate(data);
+            await schema.validate({
+                password,
+                confirmPassword
+            });
 
-            navigation.navigate('SignUpSecondStep', {
-                user: data
+            const data = {
+                ...user,
+                password,
+                confirmPassword
+            };
+
+            // save user
+            // go to confirmation screen
+            navigation.navigate('Confirmation', {
+                title: 'Cadastro realizado\n com sucesso!',
+                message: `Agora você já pode fazer login\nna aplicação.`,
+                nextScreenRoute: 'SignIn'
             });
         } catch (error) {
 
@@ -96,32 +120,25 @@ export function SignUpFirstStep() {
                     </Subtitle>
 
                     <Form>
-                        <FormTitle>1. Dados</FormTitle>
-                        <Input
-                            placeholder="Nome"
-                            iconName='user'
-                            value={name}
-                            onChangeText={setName}
+                        <FormTitle>2. Senha</FormTitle>
+                        <PasswordInput
+                            iconName="lock"
+                            placeholder="Senha"
+                            value={password}
+                            onChangeText={setPassword}
                         />
-                        <Input
-                            placeholder="Email"
-                            iconName='mail'
-                            keyboardType='email-address'
-                            value={email}
-                            onChangeText={setEmail}
-                        />
-                        <Input
-                            placeholder="CPF/CNH"
-                            iconName='credit-card'
-                            keyboardType='numeric'
-                            value={document}
-                            onChangeText={setDocument}
+                        <PasswordInput
+                            iconName="lock"
+                            placeholder="Confirmar senha"
+                            value={confirmPassword}
+                            onChangeText={setConfirmPassword}
                         />
                     </Form>
 
                     <Button
                         title='Próximo'
-                        onPress={handleNextStep}
+                        color={theme.colors.success}
+                        onPress={handleRegister}
                     />
                 </Container>
             </TouchableWithoutFeedback>

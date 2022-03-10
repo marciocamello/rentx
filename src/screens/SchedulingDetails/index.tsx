@@ -92,7 +92,13 @@ export function SchedulingDetails() {
             id: car.id,
             unavailable_dates
         })
-            .then(() => navigation.navigate('SchedulingComplete'))
+            .then(() => {
+                navigation.navigate('Confirmation', {
+                    title: 'Agendamento realizado com sucesso!',
+                    message: `Agora voce precisa ir\nate a consessionaria da RENTX\npara retirar o carro.`,
+                    nextScreenRoute: 'Home',
+                });
+            })
             .catch((error) => {
                 console.log(error);
                 Alert.alert('Erro ao confirmar reserva', 'Tente novamente mais tarde.');

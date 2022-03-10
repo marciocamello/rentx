@@ -5,9 +5,10 @@ declare namespace ReactNavigation {
         CarDetails: NavigationStackProp<string>;
         Scheduling: NavigationStackProp<string>;
         SchedulingDetails: NavigationStackProp<string>;
-        SchedulingComplete: NavigationStackProp<string>;
         MyCars: NavigationStackProp<string>;
         SignIn: NavigationStackProp<string>;
         SignUpFirstStep: NavigationStackProp<string>;
+        SignUpSecondStep: NavigationStackProp<string>;
+        Confirmation: NavigationStackProp<string>;
     }
 }
