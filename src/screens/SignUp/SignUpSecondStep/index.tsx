@@ -18,6 +18,8 @@ import { Bullet } from '../../../components/Bullet';
 import { PasswordInput } from '../../../components/PasswordInput';
 import { Button } from '../../../components/Button';
 
+import { api } from '../../../services/api';
+
 import {
     Container,
     Header,
@@ -66,18 +68,26 @@ export function SignUpSecondStep() {
             });
 
             const data = {
-                ...user,
-                password,
-                confirmPassword
+                name: user.name,
+                email: user.email,
+                driver_license: user.document,
+                password
             };
 
             // save user
-            // go to confirmation screen
-            navigation.navigate('Confirmation', {
-                title: 'Cadastro realizado\n com sucesso!',
-                message: `Agora você já pode fazer login\nna aplicação.`,
-                nextScreenRoute: 'SignIn'
-            });
+            await api.post('/users', data)
+                .then(() => {
+
+                    // go to confirmation screen
+                    navigation.navigate('Confirmation', {
+                        title: 'Cadastro realizado\n com sucesso!',
+                        message: `Agora você já pode fazer login\nna aplicação.`,
+                        nextScreenRoute: 'SignIn'
+                    });
+                }).catch((error) => {
+                    console.log(error);
+                    Alert.alert('Erro', 'Erro ao realizar cadastro');
+                });
         } catch (error) {
 
             if (error instanceof Yup.ValidationError) {
@@ -106,8 +116,8 @@ export function SignUpSecondStep() {
                     <Header>
                         <BackButton onPress={handleBack} />
                         <Steps>
-                            <Bullet active />
                             <Bullet />
+                            <Bullet active />
                         </Steps>
                     </Header>
 

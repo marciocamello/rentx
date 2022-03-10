@@ -65,7 +65,7 @@ export function SchedulingDetails() {
     const route = useRoute();
     const { car, dates } = route.params as Params;
 
-    const rentTotal = Number(dates.length) * car.rent.price;
+    const rentTotal = Number(dates.length) * car.price;
 
     function handleBack() {
         navigation.goBack();
@@ -74,14 +74,14 @@ export function SchedulingDetails() {
     async function handleConfirmRental() {
         setLoading(true);
 
-        const schedulesByCar = await api.get(`/schedules_bycars/${car.id}`);
+        const schedulesByCar = await api.get(`/cars/rental/${car.id}`);
 
         const unavailable_dates = [
             ...schedulesByCar.data.unavailable_dates,
             ...dates,
         ];
 
-        await api.post(`/schedules_byuser`, {
+        await api.post(`/users/sync`, {
             user_id: 1,
             car,
             startDate: format(getPlatformDate(new Date(dates[0])), 'dd/MM/yyyy'),
@@ -140,8 +140,8 @@ export function SchedulingDetails() {
                     </Description>
 
                     <Rent>
-                        <Period>{car.rent.period}</Period>
-                        <Price>R$ {car.rent.price}</Price>
+                        <Period>{car.period}</Period>
+                        <Price>R$ {car.price}</Price>
                     </Rent>
                 </Details>
 
@@ -184,7 +184,7 @@ export function SchedulingDetails() {
                 <RentalPrice>
                     <RentalPriceLabel>TOTAL</RentalPriceLabel>
                     <RentalPriceDetails>
-                        <RentalPriceQuote>{`R$ ${car.rent.price} x${dates.length} diarias`}</RentalPriceQuote>
+                        <RentalPriceQuote>{`R$ ${car.price} x${dates.length} diarias`}</RentalPriceQuote>
                         <RentalPriceTotal>R$ {rentTotal}</RentalPriceTotal>
                     </RentalPriceDetails>
                 </RentalPrice>

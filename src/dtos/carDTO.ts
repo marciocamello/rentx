@@ -1,6 +1,12 @@
-export type Accessories = {
+export type CarAccessories = {
+    id: string;
     type: string;
     name: string;
+}
+
+export type CarPhotos = {
+    id: string;
+    photo: string;
 }
 
 export interface CarDTO {
@@ -8,12 +14,10 @@ export interface CarDTO {
     brand: string;
     name: string;
     about: string;
-    rent: {
-        period: string;
-        price: number;
-    };
+    period: string;
+    price: number;
     fuel_type: string;
     thumbnail: string;
-    accessories: Accessories[];
-    photos: string[];
+    accessories: CarAccessories[];
+    photos: CarPhotos[];
 }

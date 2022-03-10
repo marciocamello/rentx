@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 import {
+    useAuth
+} from '../../hooks/auth';
+
+import {
     StatusBar,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
@@ -34,6 +38,7 @@ export function SignIn() {
     const theme = useTheme();
 
     const navigation = useNavigation();
+    const { signIn } = useAuth();
 
     async function handleSignIn() {
         try {
@@ -51,6 +56,10 @@ export function SignIn() {
             Alert.alert('Sucesso', 'Login realizado com sucesso');
 
             // fazer login
+            signIn({
+                email,
+                password,
+            });
         } catch (error) {
 
             if (error instanceof Yup.ValidationError) {
