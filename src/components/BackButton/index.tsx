@@ -1,7 +1,7 @@
 import React from 'react';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from 'styled-components';
-import { BorderlessButtonProps } from 'react-native-gesture-handler';
+import { BorderlessButtonProps, GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import {
     Container
@@ -21,12 +21,14 @@ export function BackButton({
     const theme = useTheme();
 
     return (
-        <Container {...rest} onPress={onPress}>
-            <MaterialIcons
-                name="chevron-left"
-                size={24}
-                color={color ?? theme.colors.text}
-            />
-        </Container>
+        <GestureHandlerRootView>
+            <Container {...rest} onPress={onPress}>
+                <MaterialIcons
+                    name="chevron-left"
+                    size={24}
+                    color={color ?? theme.colors.text}
+                />
+            </Container>
+        </GestureHandlerRootView>
     );
 }
