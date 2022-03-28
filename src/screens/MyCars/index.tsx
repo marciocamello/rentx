@@ -56,7 +56,7 @@ export function MyCars() {
                 carsData.reverse();
                 setCars(carsData);
             } catch (err) {
-                console.log(err);
+                console.log('MyCars::error', err);
             } finally {
                 setLoading(false);
             }

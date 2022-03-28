@@ -53,8 +53,6 @@ export function SignIn() {
 
             await schema.validate({ email, password });
 
-            Alert.alert('Sucesso', 'Login realizado com sucesso');
-
             // fazer login
             signIn({
                 email,
