@@ -21,6 +21,9 @@ import { Button } from '../../components/Button';
 import { Input } from '../../components/Input';
 import { PasswordInput } from '../../components/PasswordInput';
 
+import { useNetInfo } from '@react-native-community/netinfo';
+import { api } from '../../services/api';
+
 import {
     Container,
     Header,
@@ -44,7 +47,7 @@ export function Profile() {
         updatedUser
     } = useAuth();
 
-    const [option, setOption] = useState<'dataEdit' | 'password'>('dataEdit');
+    const [option, setOption] = useState<'dataEdit' | 'passwordEdit'>('dataEdit');
 
     const [avatar, setAvatar] = useState<string>(user.avatar);
     const [name, setName] = useState<string>(user.name);
@@ -57,6 +60,7 @@ export function Profile() {
 
     const theme = useTheme();
     const navigation = useNavigation();
+    const netInfo = useNetInfo();
 
     function handleBack() {
         navigation.goBack();
@@ -75,8 +79,12 @@ export function Profile() {
         ]);
     }
 
-    function handleOptionChange(optionSelected: 'dataEdit' | 'password') {
-        setOption(optionSelected);
+    function handleOptionChange(optionSelected: 'dataEdit' | 'passwordEdit') {
+        if (netInfo.isConnected === false && optionSelected === 'passwordEdit') {
+            Alert.alert('Para mudar a senha, conecte-se a Internet');
+        } else {
+            setOption(optionSelected);
+        }
     }
 
     async function handleAvatarSelect() {
@@ -96,13 +104,27 @@ export function Profile() {
         }
     }
 
+    let schema: Yup.ObjectSchema<any>;
+
     async function handleProfileUpdate() {
 
         try {
-            const schema = Yup.object().shape({
-                name: Yup.string().required('Nome é obrigatório'),
-                driverLicense: Yup.string().required('CNH/CPF é obrigatório'),
-            });
+
+            if (option === 'passwordEdit') {
+
+                schema = Yup.object().shape({
+                    oldPassword: Yup.string().required('Senha antiga é obrigatória'),
+                    password: Yup.string().required('Senha é obrigatória'),
+                    confirmPassword: Yup.string().required('Confirmação de senha é obrigatória')
+                        .oneOf([Yup.ref('password')], 'Confirmação de senha não confere'),
+                });
+            } else {
+
+                schema = Yup.object().shape({
+                    name: Yup.string().required('Nome é obrigatório'),
+                    driverLicense: Yup.string().required('CNH/CPF é obrigatório'),
+                });
+            }
 
             const data = {
                 name,
@@ -111,13 +133,21 @@ export function Profile() {
 
             await schema.validate(data);
 
+            if (password && oldPassword) {
+
+                api.put('users', {
+                    password,
+                    old_password: oldPassword
+                }).catch(error => console.log(error))
+            }
+
             await updatedUser({
                 id: user.id,
                 user_id: user.user_id,
                 email: user.email,
                 name,
                 driver_license: driverLicense,
-                avatar: avatar,
+                avatar,
                 token: user.token,
             });
 
@@ -187,10 +217,10 @@ export function Profile() {
                                 </OptionTitle>
                             </Option>
                             <Option
-                                active={option === 'password'}
-                                onPress={() => handleOptionChange('password')}
+                                active={option === 'passwordEdit'}
+                                onPress={() => handleOptionChange('passwordEdit')}
                             >
-                                <OptionTitle active={option === 'password'}>
+                                <OptionTitle active={option === 'passwordEdit'}>
                                     Senha
                                 </OptionTitle>
                             </Option>
@@ -225,14 +255,17 @@ export function Profile() {
                                     <PasswordInput
                                         iconName="lock"
                                         placeholder="Senha atual"
+                                        onChangeText={setOldPassword}
                                     />
                                     <PasswordInput
                                         iconName="lock"
                                         placeholder="Nova Senha"
+                                        onChangeText={setPassword}
                                     />
                                     <PasswordInput
                                         iconName="lock"
                                         placeholder="Repetir Senha"
+                                        onChangeText={setConfirmPassword}
                                     />
                                 </Section>
                             )

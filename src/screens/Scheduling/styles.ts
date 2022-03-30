@@ -18,7 +18,7 @@ export const Header = styled.View`
     background-color: ${({ theme }) => theme.colors.header};
 
     justify-content: center;
-    padding: 25px 25px 10px ;
+    padding: 25px ;
     padding-top: ${getStatusBarHeight() + 30}px;
 `;
 
@@ -72,5 +72,5 @@ export const Content = styled.ScrollView.attrs({
 `;
 
 export const Footer = styled.View`
-    padding: 24px;
+    padding: 10px;
 `;

@@ -8353,9 +8353,9 @@ react-is@^17.0.1:
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
 react-native-calendars@^1.1278.0:
-  version "1.1279.0"
-  resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.1279.0.tgz#7fc6903bc16a2860b5f49ac7ee062d43b5189ffe"
-  integrity sha512-vUKmYCT6IGg200VnhLbcraaNaIoOF2MrgkZVSQdYu/XkFFOtLUwYmpEMQ5CBEoENZ+9K8fgUNdmorvu/QnXmYA==
+  version "1.1280.0"
+  resolved "https://registry.yarnpkg.com/react-native-calendars/-/react-native-calendars-1.1280.0.tgz#133ab3762c94b819f12e87aa310119711cefb3f0"
+  integrity sha512-WXlFQ2D3qxB26H5DSN8o5kS+ZTSk075GPu60u6xCzgUYUm8+nwCJ4MaO2oPzK+nYBMWYXzgSufXQhtxisU4GNA==
   dependencies:
     fs "^0.0.1-security"
     hoist-non-react-statics "^3.3.1"
@@ -8377,6 +8377,11 @@ react-native-codegen@^0.0.6:
     flow-parser "^0.121.0"
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
+
+react-native-fast-image@^8.5.11:
+  version "8.5.11"
+  resolved "https://registry.yarnpkg.com/react-native-fast-image/-/react-native-fast-image-8.5.11.tgz#e3dc969d0e4e8df026646bf18194465aa55cbc2b"
+  integrity sha512-cNW4bIJg3nvKaheG8vGMfqCt5LMWX9MS5+wMudgKIHbGO51spRr4sgnlhVgwHLcZ5aeNOVJ8CPRxDIWKRq/0QA==
 
 react-native-gesture-handler@~2.1.0:
   version "2.1.3"

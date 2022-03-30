@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTheme } from 'styled-components';
 import { StatusBar } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { BackButton } from '../../components/BackButton';
 
@@ -63,7 +64,8 @@ export function Scheduling() {
         let end = date;
 
         if (start.timestamp > end.timestamp) {
-            [start, end] = [end, start];
+            start = end;
+            end = start;
         }
 
         setLastSelectedDate(end);
@@ -121,7 +123,7 @@ export function Scheduling() {
 
             <Content>
                 <Calendar
-                    marketDates={markedDates}
+                    markedDates={markedDates}
                     onDayPress={handleChangeDate}
                 />
             </Content>
@@ -130,7 +132,7 @@ export function Scheduling() {
                 <Button
                     title='Confirm'
                     onPress={handleConfirmRental}
-                    enabled={!!rentalPeriod.startFormatted && !!rentalPeriod.endFormatted}
+                    enabled={!!rentalPeriod.startFormatted}
                 />
             </Footer>
         </Container>

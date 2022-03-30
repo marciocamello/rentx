@@ -4,7 +4,7 @@ import { useTheme } from 'styled-components';
 
 import {
     Calendar as CustomCalendar,
-    DateData
+    DateData,
 } from 'react-native-calendars';
 
 import { generateInterval } from './generateInterval';
@@ -12,7 +12,7 @@ import { generateInterval } from './generateInterval';
 import './localeConfig';
 
 interface MarketDateProps {
-    [data: string]: {
+    [date: string]: {
         color: string;
         textColor: string;
         disabled?: boolean;
@@ -23,12 +23,12 @@ interface MarketDateProps {
 type DayProps = DateData;
 
 interface CalendarProps {
-    marketDates: MarketDateProps;
-    onDayPress?: (date: DateData) => void;
+    markedDates: MarketDateProps;
+    onDayPress: (day: DayProps) => void;
 }
 
 function Calendar({
-    marketDates,
+    markedDates,
     onDayPress
 }: CalendarProps) {
     const theme = useTheme();
@@ -46,8 +46,8 @@ function Calendar({
                 backgroundColor: theme.colors.background_secondary,
                 borderBottomWidth: 0.5,
                 borderBottomColor: theme.colors.text_detail,
-                paddingBottom: 10,
-                marginBottom: 10,
+                paddingBottom: 8,
+                marginBottom: 8,
             }}
             theme={{
                 textDayFontFamily: theme.fonts.primary_400,
@@ -61,9 +61,9 @@ function Calendar({
                 }
             }}
             firstDay={1}
-            minDate={new Date().toISOString()}
+            minDate={String(new Date())}
             markingType={'period'}
-            markedDates={marketDates}
+            markedDates={markedDates}
             onDayPress={onDayPress}
         />
     );

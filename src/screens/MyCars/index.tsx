@@ -1,15 +1,16 @@
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { useTheme } from 'styled-components';
+import { parseISO, format } from 'date-fns';
 
 import { BackButton } from '../../components/BackButton';
 import { LoadAnimation } from '../../components/LoadAnimation';
 
 import { Car } from '../../components/Car';
-import { CarDTO } from '../../dtos/carDTO';
+import { Car as ModelCar } from '../../database/model/Car';
 import { api } from '../../services/api';
 
 import {
@@ -28,17 +29,17 @@ import {
     CarFooterDate,
 } from './styles';
 
-interface MyCarsProps {
+interface DataProps {
     id: string;
-    user_id: string;
-    car: CarDTO;
-    startDate: string;
-    endDate: string;
+    car: ModelCar;
+    start_date: string;
+    end_date: string;
 }
 
 export function MyCars() {
-    const [cars, setCars] = useState<MyCarsProps[]>([]);
+    const [cars, setCars] = useState<DataProps[]>([]);
     const [loading, setLoading] = useState(true);
+    const screenIsFocus = useIsFocused();
 
     const theme = useTheme();
 
@@ -51,10 +52,16 @@ export function MyCars() {
     useEffect(() => {
         async function fetchCars() {
             try {
-                const response = await api.get('/schedules_byuser/?user_id=1');
-                const carsData = response.data;
-                carsData.reverse();
-                setCars(carsData);
+                const response = await api.get('/rentals');
+                const dataFormatted = response.data.map((data: DataProps) => {
+                    return {
+                        id: data.id,
+                        car: data.car,
+                        start_date: format(parseISO(data.start_date), 'dd/MM/yyyy'),
+                        end_date: format(parseISO(data.end_date), 'dd/MM/yyyy'),
+                    }
+                })
+                setCars(dataFormatted);
             } catch (err) {
                 console.log('MyCars::error', err);
             } finally {
@@ -63,7 +70,7 @@ export function MyCars() {
         }
 
         fetchCars();
-    }, []);
+    }, [screenIsFocus]);
 
     return (
         <Container>
@@ -96,7 +103,7 @@ export function MyCars() {
 
                     <FlatList
                         data={cars}
-                        keyExtractor={car => String(car.id)}
+                        keyExtractor={item => String(`${item.id}`)}
                         showsVerticalScrollIndicator={false}
                         renderItem={({ item }) => (
                             <CarWrapper>
@@ -104,7 +111,7 @@ export function MyCars() {
                                 <CarFooter>
                                     <CarFooterTitle>Periodo</CarFooterTitle>
                                     <CarFooterPeriod>
-                                        <CarFooterDate>{item.startDate}</CarFooterDate>
+                                        <CarFooterDate>{item.start_date}</CarFooterDate>
                                         <AntDesign
                                             name="arrowright"
                                             size={20}
@@ -113,7 +120,7 @@ export function MyCars() {
                                                 marginHorizontal: 10
                                             }}
                                         />
-                                        <CarFooterDate>{item.endDate}</CarFooterDate>
+                                        <CarFooterDate>{item.end_date}</CarFooterDate>
                                     </CarFooterPeriod>
                                 </CarFooter>
                             </CarWrapper>

@@ -74,36 +74,24 @@ export function SchedulingDetails() {
     async function handleConfirmRental() {
         setLoading(true);
 
-        const schedulesByCar = await api.get(`/cars/rental/${car.id}`);
-
-        const unavailable_dates = [
-            ...schedulesByCar.data.unavailable_dates,
-            ...dates,
-        ];
-
-        await api.post(`/users/sync`, {
+        await api.post(`/rentals`, {
             user_id: 1,
-            car,
-            startDate: format(getPlatformDate(new Date(dates[0])), 'dd/MM/yyyy'),
-            endDate: format(getPlatformDate(new Date(dates[dates.length - 1])), 'dd/MM/yyyy'),
-        });
-
-        api.put(`/schedules_bycars/${car.id}`, {
-            id: car.id,
-            unavailable_dates
+            car_id: car.id,
+            start_date: new Date(dates[0]),
+            end_date: new Date(dates[dates.length - 1]),
+            total: rentTotal
         })
             .then(() => {
                 navigation.navigate('Confirmation', {
-                    title: 'Agendamento realizado com sucesso!',
-                    message: `Agora voce precisa ir\nate a consessionaria da RENTX\npara retirar o carro.`,
                     nextScreenRoute: 'Home',
-                });
+                    title: 'Carro alugado!',
+                    message: `Agora você só precisa ir\naté a concessionária da RENTX\npegar o seu automóvel.`
+                })
             })
-            .catch((error) => {
-                console.log(error);
-                Alert.alert('Erro ao confirmar reserva', 'Tente novamente mais tarde.');
+            .catch((erro) => {
                 setLoading(false);
-            });
+                Alert.alert('Não foi possível confirmar o agendamento.')
+            })
     }
 
     useEffect(() => {
@@ -128,7 +116,13 @@ export function SchedulingDetails() {
 
             <CardImages>
                 <ImageSlider
-                    imagesURL={car.photos}
+                    imagesURL={
+                        !!car.photos ?
+                            car.photos : [{
+                                id: car.thumbnail,
+                                photo: car.thumbnail
+                            }]
+                    }
                 />
             </CardImages>
 
@@ -145,7 +139,7 @@ export function SchedulingDetails() {
                     </Rent>
                 </Details>
 
-                <Accessories>
+                {car.accessories && <Accessories>
                     {car.accessories.map(accessory => (
                         <Accessory
                             key={accessory.type}
@@ -153,7 +147,7 @@ export function SchedulingDetails() {
                             icon={getAccessoryIcon(accessory.type)}
                         />
                     ))}
-                </Accessories>
+                </Accessories>}
 
                 <RentalPeriod>
                     <CalendarIcon>
