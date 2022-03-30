@@ -17,6 +17,8 @@ import { api } from '../../services/api';
 import { useNetInfo } from '@react-native-community/netinfo';
 
 import { CarDTO } from '../../dtos/carDTO';
+import { Car as ModelCar } from '../../database/model/Car';
+import { database } from '../../database';
 
 import {
     Container,
@@ -87,14 +89,25 @@ export function CarDetails() {
         });
     }
 
+    async function getCachedCar() {
+        const carCollection = database.get<any>('cars');
+        const car = await carCollection.find(carId);
+        setCar(car);
+    }
+
+    async function fetchOnlineData() {
+        const response = await api.get(`/cars/${carId}`);
+        setCar(response.data);
+    }
+
     useEffect(() => {
-        async function fetchOnlineData() {
-            const response = await api.get(`/cars/${carId}`);
-            setCar(response.data);
-        }
 
         if (netInfo.isConnected === true) {
+
             fetchOnlineData();
+        } else {
+
+            getCachedCar();
         }
     }, [netInfo.isConnected]);
 
